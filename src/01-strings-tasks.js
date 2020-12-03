@@ -315,7 +315,7 @@ function getCardId(value) {
     * (firstChar.indexOf(newValue) + 1)
     + firstChar.length * value.charCodeAt(-1);
 
-  console.log(firstChar.indexOf(value[0]));
+  // console.log(firstChar.indexOf(value[0]));
   return result - 1;
 }
 
