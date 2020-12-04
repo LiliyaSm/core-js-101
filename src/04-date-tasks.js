@@ -110,7 +110,6 @@ function timeSpanToString(startDate, endDate) {
   diff -= diffSeconds * 1000;
   const ms = paddZThreeZiro(diff);
 
-
   diffHours = paddZiro(diffHours);
   diffMinutes = paddZiro(diffMinutes);
   diffSeconds = paddZiro(diffSeconds);
@@ -134,8 +133,13 @@ function timeSpanToString(startDate, endDate) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const res = Math.abs(0.5 * (60 * (hours % 12) - 11 * minutes));
+  const angle = res > 180 ? 360 - res : res;
+
+  return (angle / 180) * Math.PI;
 }
 
 module.exports = {
