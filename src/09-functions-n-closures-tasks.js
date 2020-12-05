@@ -62,8 +62,22 @@ function getPowerFunction(exponent) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-  throw new Error('Not implemented');
+
+function getPolynom(...args) {
+  function Wrapper() {
+    this.polynom = [...args];
+    this.y = (x) => {
+      if (this.polynom.length === 0) {
+        return null;
+      }
+      return this.polynom
+        .reverse()
+        .map((el, i) => el * x ** i)
+        .reduce((acc, el) => acc + el, 0);
+    };
+    return this.y;
+  }
+  return new Wrapper();
 }
 
 /**
@@ -109,14 +123,21 @@ function memoize(func) {
  */
 function retry(func, attempts) {
   let counter = attempts;
-  try {
-    func();
-  } catch (error) {
-    if (counter !== 0) {
-      counter -= counter;
-      retry(func, counter - 1);
+  const f = func;
+  let res;
+  function wrapper() {
+    try {
+      res = f();
+      return res;
+    } catch (error) {
+      if (counter !== 0) {
+        counter -= 1;
+        wrapper();
+      }
     }
+    return res;
   }
+  return wrapper;
 }
 
 /**
