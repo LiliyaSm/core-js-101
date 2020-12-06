@@ -273,7 +273,7 @@ function isString(value) {
  * Playing cards inittial deck inclides the cards in the following order:
  *
  *  'A♣','2♣','3♣','4♣','5♣','6♣','7♣','8♣','9♣','10♣','J♣','Q♣','K♣',  9827
- *  'A♦','2♦','3♦','4♦','5♦','6♦','7♦','8♦','9♦','10♦','J♦','Q♦','K♦', 9830
+ *  'A♦','2♦','3♦','4♦','5♦','6♦','7♦','8♦','9♦','10♦','J♦','Q♦','K♦', 9830 // 13
  *  'A♥','2♥','3♥','4♥','5♥','6♥','7♥','8♥','9♥','10♥','J♥','Q♥','K♥', 9829
  *  'A♠','2♠','3♠','4♠','5♠','6♠','7♠','8♠','9♠','10♠','J♠','Q♠','K♠' 9824
  *
@@ -309,14 +309,10 @@ function getCardId(value) {
     'K',
   ];
 
-  const newValue = value.slice(0, -1);
-
-  const result = (secondChar.indexOf(value.charCodeAt(-1)) + 1)
-    * (firstChar.indexOf(newValue) + 1)
-    + firstChar.length * value.charCodeAt(-1);
-
-  // console.log(firstChar.indexOf(value[0]));
-  return result - 1;
+  const letterValue = value.slice(0, -1);
+  const result = firstChar.indexOf(letterValue)
+    + firstChar.length * secondChar.indexOf(value.charCodeAt(value.length - 1));
+  return result;
 }
 
 module.exports = {

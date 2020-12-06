@@ -228,13 +228,15 @@ function toArrayOfSquares(arr) {
  *   [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] => [ 1, 3, 6, 10, 15, 21, 28, 36, 45, 55 ]
  */
 function getMovingSum(array) {
+  const a = [...array];
   return array.map((el, i) => {
     let modEl;
     if (i > 0) {
-      modEl = array[i - 1] + el;
+      modEl = a[i - 1] + el;
     } else {
       modEl = el;
     }
+    a[i] = modEl;
     return modEl;
   });
 
@@ -273,8 +275,12 @@ function getSecondItems(arr) {
  *  [ 'a', 'b', 'c', null ] => [ 'a', 'b','b', 'c','c','c',  null,null,null,null ]
  *  [ 1,2,3,4,5 ] => [ 1, 2,2, 3,3,3, 4,4,4,4, 5,5,5,5,5 ]
  */
-function propagateItemsByPositionIndex(/* arr */) {
-  throw new Error('Not implemented');
+function propagateItemsByPositionIndex(arr) {
+  return arr.reduce((acc, el, i) => {
+    const newArr = new Array(i + 1);
+    newArr.fill(el);
+    return acc.concat(newArr);
+  }, []);
 }
 
 /**
@@ -290,8 +296,11 @@ function propagateItemsByPositionIndex(/* arr */) {
  *   [ 1,2,3,4,5,6,7,8,9,10 ] => [ 10, 9, 8 ]
  *   [ 10, 10, 10, 10 ] => [ 10, 10, 10 ]
  */
-function get3TopItems(/* arr */) {
-  throw new Error('Not implemented');
+function get3TopItems(arr) {
+  return arr
+    .sort((a, b) => a - b)
+    .reverse()
+    .splice(0, 3);
 }
 
 /**
@@ -325,8 +334,20 @@ function getPositivesCount(arr) {
  *   [ 'nine','eight','nine','eight'] => [ 'eight','eight','nine','nine']
  *   [ 'one','one','one','zero' ]     => [ 'zero','one','one','one' ]
  */
-function sortDigitNamesByNumericOrder(/* arr */) {
-  throw new Error('Not implemented');
+function sortDigitNamesByNumericOrder(arr) {
+  const list = [
+    'zero',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine',
+  ];
+  return arr.sort((a, b) => list.indexOf(a) - list.indexOf(b));
 }
 
 /**
@@ -420,8 +441,11 @@ function toStringList(arr) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  *    ]
  */
-function sortCitiesArray(/* arr */) {
-  throw new Error('Not implemented');
+// different countries => do not check 2nd
+function sortCitiesArray(arr) {
+  return arr.sort(
+    (a, b) => a.country.localeCompare(b.country) || a.city.localeCompare(b.city),
+  );
 }
 
 /**
@@ -442,8 +466,15 @@ function sortCitiesArray(/* arr */) {
  *           [0,0,0,1,0],
  *           [0,0,0,0,1]]
  */
-function getIdentityMatrix(/* n */) {
-  throw new Error('Not implemented');
+
+function getIdentityMatrix(n) {
+  const ans = Array(n).fill(Array(n).fill(0));
+  const res = ans.map((el, i) => {
+    const newEl = [...el];
+    newEl[i] = 1;
+    return newEl;
+  });
+  return res;
 }
 
 /**
@@ -511,8 +542,20 @@ function distinct(arr) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  // const map = new Map();
+  const ans = array.reduce((acc, el) => {
+    const key = keySelector(el);
+    const value = valueSelector(el);
+    if (key in acc) {
+      acc[key].push(value);
+    } else {
+      acc[key] = [value];
+    }
+    return acc;
+  }, {});
+
+  return new Map(Object.entries(ans));
 }
 
 /**
@@ -528,8 +571,14 @@ function group(/* array, keySelector, valueSelector */) {
  *   [[1, 2], [3, 4], [5, 6]], (x) => x     =>   [ 1, 2, 3, 4, 5, 6 ]
  *   ['one','two','three'], x=>x.split('')  =>   ['o','n','e','t','w','o','t','h','r','e','e']
  */
-function selectMany(/* arr, childrenSelector */) {
-  throw new Error('Not implemented');
+// let acc = [];
+// arr.forEach((el) => {
+//   acc = acc.concat(childrenSelector(el));
+// });
+// return acc;
+// 2ns variant
+function selectMany(arr, childrenSelector) {
+  return arr.reduce((acc, el) => acc.concat(childrenSelector(el)), []);
 }
 
 /**
@@ -544,8 +593,11 @@ function selectMany(/* arr, childrenSelector */) {
  *   ['one','two','three'], [2]       => 'three'  (arr[2])
  *   [[[ 1, 2, 3]]], [ 0, 0, 1 ]      => 2        (arr[0][0][1])
  */
-function getElementByIndexes(/* arr, indexes */) {
-  throw new Error('Not implemented');
+function getElementByIndexes(arr, indexes) {
+  if (indexes.length === 1) {
+    return arr[indexes[0]];
+  }
+  return getElementByIndexes(arr[indexes[0]], indexes.splice(1));
 }
 
 /**
