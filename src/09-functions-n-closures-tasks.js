@@ -70,7 +70,8 @@ function getPolynom(...args) {
       if (this.polynom.length === 0) {
         return null;
       }
-      return this.polynom
+      const a = [...this.polynom];
+      return a
         .reverse()
         .map((el, i) => el * x ** i)
         .reduce((acc, el) => acc + el, 0);
@@ -163,8 +164,24 @@ function retry(func, attempts) {
  * cos(3.141592653589793) ends
  *
  */
-function logger(/* func, logFunc */) {
-  throw new Error('Not implemented');
+function logger(func, logFunc) {
+  function start(argsStr) {
+    logFunc(`${func.name}(${argsStr}) starts`);
+  }
+  function ends(argsStr) {
+    logFunc(`${func.name}(${argsStr}) ends`);
+  }
+
+  function wrapper(...args) {
+    const argsStr = JSON.stringify(args);
+    const sliceArgs = argsStr.slice(1, -1);
+    start(sliceArgs);
+    const res = logFunc(func(args));
+    ends(sliceArgs);
+    return res;
+  }
+
+  return wrapper;
 }
 
 /**
