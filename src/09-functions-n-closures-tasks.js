@@ -176,7 +176,7 @@ function logger(func, logFunc) {
     const argsStr = JSON.stringify(args);
     const sliceArgs = argsStr.slice(1, -1);
     start(sliceArgs);
-    const res = logFunc(func(args));
+    const res = func(...args);
     ends(sliceArgs);
     return res;
   }
