@@ -100,12 +100,19 @@ function getFastestPromise(array) {
  *    });
  *
  */
-// const res = array.reduce((acc, promise) => action(promise));
-function chainPromises(/* array, action */) {
-  // const filteredPromises = array.filter((p) => p.then((value) => true).catch(() => false));
-  throw new Error('Not implemented');
-
-  // const resolvedPromises = filteredPromises.map((p) => p.then((value) => value));
+function chainPromises(array, action) {
+  return new Promise((res) => {
+    const ans = [];
+    const errors = [];
+    array.forEach((p) => p
+      .then((value) => ans.push(value))
+      .catch((error) => errors.push(error))
+      .then(() => {
+        if (ans.length + errors.length === array.length) {
+          res(ans.reduce((acc, el) => action(acc, el)));
+        }
+      }));
+  });
 }
 
 module.exports = {
